@@ -14,3 +14,14 @@ Scenario-based questions and answers aimed at DevOps engineers with around five 
 - [Terraform](./terraform.md)
 - [Linux](./linux.md)
 - [Monitoring and Observability](./monitoring.md)
+
+## Code Examples
+
+Runnable starting points for common DevOps tasks:
+
+- [Terraform AWS provider and EC2 instance](./Examples/terraform.md)
+- [Kubernetes Deployment and Service manifests](./Examples/kubernetes.md)
+- [Jenkins, GitHub Actions, and Azure DevOps pipelines](./Examples/cicd.md)
+- [Dockerfiles and runtime hardening](./Examples/docker.md)
+- [Shell health-check script](./Examples/shell.md)
+- [YAML syntax](./Examples/yaml.md)

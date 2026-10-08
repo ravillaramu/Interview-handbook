@@ -120,3 +120,25 @@ Answer:
 - Check cloud quotas, permissions, subnet/zone constraints, and CSI controller/node component health.
 - Confirm a statically provisioned PV, if used, matches the claim's capacity, access modes, and storage class.
 - Resolve the specific storage issue and validate the claim binds and the Pod mounts it; do not delete a claim containing important data without a recovery plan.
+
+### 12) Scenario: Why do we use a Kubernetes Service? Why can’t we route traffic directly to Pods?
+Answer:
+- In Kubernetes, Pods are ephemeral. Their IP addresses can change whenever a Pod is recreated, restarted, or rescheduled to another node.
+- A Kubernetes Service provides a stable endpoint for accessing a group of Pods.
+- We don't normally route traffic directly to Pods because Pod IPs are ephemeral. A Service provides a stable virtual IP/DNS name and automatically routes traffic to healthy Pods selected by labels.
+
+### 13) Scenario: How you upgrade the controlplane managed by AWS, Explain.In EKS, AWS manages the control plane. 
+Answer:
+- I don't SSH into control-plane nodes or manually upgrade etcd/API server. I initiate the EKS version upgrade, validate compatibility, upgrade add-ons and then upgrade the worker nodes.
+
+### 14) How would you provide two users access to two different Kubernetes namespaces while ensuring they cannot access each other’s namespace.
+Answer:
+- I would use namespace-scoped Roles and RoleBindings rather than ClusterRoles where possible, following the principle of least privilege.
+
+### 15) What is the purpose of running a container as a root or non-root user in a Kubernetes Deployment?
+Answer:
+- By default, depending on the container image, a container may run as the root user.
+- Running applications as root increases the security risk because if an attacker compromises the application, they may have higher privileges inside the container.
+- Therefore, we generally prefer running applications as a non-root user.
+- Running containers as non-root follows the principle of least privilege and reduces the impact of a container compromise. I use runAsNonRoot and runAsUser in the securityContext, and I make sure the application has the required filesystem permissions.
+
