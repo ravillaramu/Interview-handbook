@@ -3,7 +3,7 @@ interview-prep-handbook
 
 ## DevOps Interview Preparation
 
-Scenario-based questions and answers aimed at DevOps engineers with around five years of experience:
+Scenario-based questions and answers aimed at DevOps engineers.
 
 - [Docker](./docker.md)
 - [Git, GitHub, and GitHub Actions](./git.md)

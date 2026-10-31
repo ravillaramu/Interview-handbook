@@ -1,8 +1,8 @@
-# DevOps Engineer Interview Questions and Answers (5 Years Experience)
+# Git Scenario-Based Questions and Answers
 
-## Git, GitHub, and GitHub Actions Scenario-Based Questions and Answers
+## Git and GitHub Scenario-Based Questions and Answers
 
-### 1) Scenario: A developer accidentally commits sensitive credentials to the repository. How do you handle it?
+### 1) A developer accidentally commits sensitive credentials to the repository. How do you handle it?
 
 Answer:
 - Immediately rotate the exposed secrets, API keys, passwords, and tokens.
@@ -15,7 +15,7 @@ Answer:
 Example:
 - If an AWS access key was committed, rotate the key immediately and update services to use IAM roles or GitHub secrets.
 
-### 2) Scenario: A merge conflict occurs during a pull request. How do you resolve it safely?
+### 2) A merge conflict occurs during a pull request. How do you resolve it safely?
 
 Answer:
 - Pull the latest branch updates and understand the conflict scope.
@@ -28,7 +28,7 @@ Answer:
 Example:
 - If both branches changed the same function, compare both versions and decide which logic is correct or merge both behavior intentionally.
 
-### 3) Scenario: A team member rebases a branch and causes history issues for others. How do you manage the situation?
+### 3) A team member rebases a branch and causes history issues for others. How do you manage the situation?
 
 Answer:
 - Communicate with the team before rewriting shared history.
@@ -41,7 +41,7 @@ Answer:
 Example:
 - If the main branch was already used by another developer, a rebase would rewrite commit hashes and confuse the team.
 
-### 4) Scenario: A pull request is failing CI checks. What do you do?
+### 4) A pull request is failing CI checks. What do you do?
 
 Answer:
 - Read the failing CI job logs to identify whether the issue is build, test, lint, or security scanning.
@@ -53,7 +53,7 @@ Answer:
 Example:
 - If a lint rule fails, fix the formatting or code quality issue and rerun the GitHub Actions workflow.
 
-### 5) Scenario: You need to revert a bad production deployment that was already merged. How do you handle it?
+### 5) You need to revert a bad production deployment that was already merged. How do you handle it?
 
 Answer:
 - Identify the exact commit or PR that introduced the bad change.
@@ -65,7 +65,7 @@ Answer:
 Example:
 - A bad config change is reverted by a new commit instead of a hard reset, preserving history and avoiding destructive behavior.
 
-### 6) Scenario: A feature branch is stale and behind the main branch. How do you update it safely?
+### 6) A feature branch is stale and behind the main branch. How do you update it safely?
 
 Answer:
 - Fetch the latest changes from the remote using `git fetch origin`.
@@ -77,7 +77,7 @@ Answer:
 Example:
 - A developer rebases before opening a PR to keep linear history and reduce merge conflicts.
 
-### 7) Scenario: A developer accidentally deletes a branch that still has needed work. How do you recover it?
+### 7) A developer accidentally deletes a branch that still has needed work. How do you recover it?
 
 Answer:
 - Check whether the branch still exists remotely or in the reflog.
@@ -89,46 +89,8 @@ Answer:
 Example:
 - A developer deletes a feature branch after merging, then discovers a needed hotfix was not included. Git reflog can restore the lost commit.
 
-### 8) Scenario: A team wants to enforce quality gates before merging to main. How do you design it?
 
-Answer:
-- Enable branch protection rules in GitHub.
-- Require pull request reviews before merging.
-- Require status checks like lint, test, security scan, and build to pass.
-- Block direct pushes to the main branch.
-- Require signed commits for higher security if needed.
-- Use GitHub Actions to enforce CI and security policies automatically.
-
-Example:
-- Main branch requires at least 2 approvals and a green build before merge.
-
-### 9) Scenario: A GitHub Actions pipeline is flaky and sometimes fails randomly. What do you check?
-
-Answer:
-- Review logs for timeouts, resource limits, or rate-limits.
-- Check whether the workflow depends on external services or network access.
-- Use caching for dependencies to reduce runtime and instability.
-- Validate environment variables, secrets, and matrix strategies.
-- Confirm runner images are updated and consistent across jobs.
-- Add retries for non-deterministic external steps when appropriate.
-
-Example:
-- A workflow fails because a package registry rate-limits requests. Using a cached dependency layer or a private registry reduces instability.
-
-### 10) Scenario: A release pipeline is deploying the wrong artifact version. How do you fix it?
-
-Answer:
-- Verify the Git tag, GitHub release version, and CI artifact version align.
-- Check workflow variables and environment configuration.
-- Ensure the build is triggered by the correct branch or tag.
-- Validate artifact provenance and checksum before deployment.
-- Use immutable build artifacts and versioning tags to avoid confusion.
-- Add manual approval gates for production rollout.
-
-Example:
-- A pipeline accidentally deploys the latest branch build instead of the intended release tag. The fix is to pin artifacts and enforce tag-based triggers.
-
-### 11) Scenario: Developers are creating too many merge commits in a busy repository. How do you improve Git hygiene?
+### 8) Developers are creating too many merge commits in a busy repository. How do you improve Git hygiene?
 
 Answer:
 - Standardize a branching strategy like GitFlow, trunk-based development, or feature branching.
@@ -140,7 +102,7 @@ Answer:
 Example:
 - A team prefers squash and merge for PRs to keep main branch history simple and easy to track.
 
-### 12) Scenario: The team needs to audit who changed what in the repository. How do you ensure traceability?
+### 9) The team needs to audit who changed what in the repository. How do you ensure traceability?
 
 Answer:
 - Use clear commit messages with issue or ticket IDs.
@@ -153,40 +115,26 @@ Answer:
 Example:
 - Every commit includes the Jira ticket ID such as `DEVOPS-184` to trace the change to an issue.
 
-### 13) Scenario: A new GitHub Action is failing because a secret is not available in a workflow job. How do you diagnose it?
+### 10) Your team follows a strict commit message convention. How do you ensure all contributors follow it automatically?
 
-Answer:
-- Confirm the secret is defined in the repository, organization, or environment settings.
-- Check whether the workflow is running on the correct branch or environment.
-- Ensure the secret is referenced correctly in YAML and scope matches the job context.
-- Verify that `secrets` are not exposed to pull requests when not intended.
-- Check environment protection rules and access permissions.
+### 11) A developer made a force push that overwrote shared history. How do you mitigate and recover from the situation?
 
-Example:
-- A production deployment job fails because the secret is defined only for `main`, but the workflow is running from a feature branch.
+### 12) A tag was mistakenly created on the wrong commit and pushed to the remote. How do you fix and retag properly?
 
-### 14) Scenario: You need to manage many repositories with consistent CI/CD standards. How do you do it?
+### 13) You accidentally pushed to the `main` branch instead of your feature branch. What do you do to fix it?
 
-Answer:
-- Create reusable GitHub Actions workflows with organization-level templates.
-- Standardize linting, testing, and security scanning across repositories.
-- Use templates or reusable workflows to maintain consistency.
-- Add central governance policies for branch protection and required checks.
-- Document repository standards and onboarding steps for new teams.
+### 14) Youre mentoring a junior developer who accidentally committed sensitive files. How do you walk them through cleaning it up using Git?
 
-Example:
-- An organization uses a shared workflow called `ci.yml` for all Node.js services, ensuring consistent build and test behavior.
+### 15) You accidentally deleted a local branch that hadnt been pushed yet. How would you recover it?
 
-### 15) Scenario: The team wants to keep GitHub Actions cost-efficient. What strategy would you recommend?
+### 16) How do you sign commits in Git? What is the use of that?
 
-Answer:
-- Use self-hosted runners for predictable workloads or large builds.
-- Cache dependencies and build artifacts to reduce repeated work.
-- Run only necessary jobs on pull requests and avoid duplicate pipelines.
-- Use matrix strategies carefully and restrict triggers to relevant branches.
-- Delete unused artifacts and set workflow concurrency to prevent redundant jobs.
-- Use path filters to trigger workflows only when relevant files change.
+### 17) What is the difference between `git pull` and `git fetch`?
 
-Example:
-- A workflow only runs for application directories, not for docs-only changes.
+### 18) What is the difference between `git reset` and `git revert`?
 
+### 19) How do you stash changes in Git?
+
+### 20) What is the purpose of the `.gitignore` file?
+
+### 21) What is the difference between `git diff` and `git difftool`?

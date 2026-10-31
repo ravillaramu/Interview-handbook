@@ -1,10 +1,8 @@
-# DevOps Engineer Interview Questions and Answers (5 Years Experience)
-
-## CI/CD and Jenkins Scenario-Based Questions and Answers
+## CI/CD and Jenkins, GitHub Actions Scenario-Based Questions and Answers
 
 ### CI/CD
 
-### 1) Scenario: CI builds and deploys a container image, but Kubernetes keeps running the old version. What do you check?
+### 1) CI builds and deploys a container image, but Kubernetes keeps running the old version. What do you check?
 
 Answer:
 - Compare the image reference in the deployment with the image digest produced by the build.
@@ -13,7 +11,7 @@ Answer:
 - Inspect rollout status, pod events, and the image actually running in each pod. A successful pipeline step does not prove a rollout completed.
 - Confirm pull credentials and registry access, then verify the deployed commit and digest in release metadata.
 
-### 2) Scenario: A vulnerable dependency is detected in a deployed container image. What is your response?
+### 2) A vulnerable dependency is detected in a deployed container image. What is your response?
 
 Answer:
 - Assess the vulnerability's severity, exploitability, affected package, and whether the vulnerable code is reachable.
@@ -22,7 +20,7 @@ Answer:
 - Promote the newly built immutable artifact through environments; do not patch a running container manually.
 - Track affected image digests and deployments so the vulnerable version is replaced everywhere, then add a suitable CI policy gate.
 
-### 3) Scenario: A pipeline passes in CI but fails after deployment. How do you improve confidence?
+### 3) A pipeline passes in CI but fails after deployment. How do you improve confidence?
 
 Answer:
 - Compare the build and deployment environments, configuration, permissions, and dependency versions.
@@ -31,7 +29,7 @@ Answer:
 - Promote the exact tested artifact rather than rebuilding it for each environment.
 - Capture deployment metadata and logs so a failed release can be traced to its commit and artifact.
 
-### 4) Scenario: A pipeline is slow and developers wait too long for feedback. How would you optimize it?
+### 4) A pipeline is slow and developers wait too long for feedback. How would you optimize it?
 
 Answer:
 - Measure duration by stage and identify the actual bottleneck before changing the workflow.
@@ -40,7 +38,7 @@ Answer:
 - Use path filters and incremental tests where confidence remains adequate.
 - Keep a fast pull-request validation path, while retaining deeper scheduled or pre-release checks.
 
-### 5) Scenario: The same artifact must be promoted from test to production without rebuilding. How do you design this?
+### 5) The same artifact must be promoted from test to production without rebuilding. How do you design this?
 
 Answer:
 - Build once from a reviewed commit and assign an immutable version or content digest.
@@ -49,7 +47,7 @@ Answer:
 - Require approvals and automated checks at promotion boundaries, especially for production.
 - Record the commit, artifact digest, approver, and deployment result for audit and rollback.
 
-### 6) Scenario: A production deployment introduces errors. What rollback approach do you use?
+### 6) A production deployment introduces errors. What rollback approach do you use?
 
 Answer:
 - Pause further rollout and assess impact using service health, error rate, and latency signals.
@@ -58,14 +56,6 @@ Answer:
 - Confirm recovery from the customer perspective and communicate status.
 - Perform a blameless review and add tests, progressive delivery, or compatibility checks to prevent recurrence.
 
-### 7) Scenario: A workflow needs cloud credentials to deploy. How do you avoid long-lived secrets?
-
-Answer:
-- Prefer workload identity federation, such as GitHub Actions OIDC to an AWS IAM role, when supported.
-- Restrict trust to the expected repository, branch, tag, environment, or workflow identity.
-- Grant the role only the deployment permissions needed and use environment approval rules for production.
-- Avoid printing credentials or sensitive environment variables in logs.
-- Audit role assumptions and rotate or revoke any credentials that may have been exposed.
 
 ### 8) Scenario: Multiple commits trigger overlapping deployments to the same environment. How do you prevent race conditions?
 
@@ -78,7 +68,7 @@ Answer:
 
 ### Jenkins
 
-### 9) Scenario: Jenkins controller is overloaded and builds are queued. How do you improve capacity safely?
+### 1) Jenkins controller is overloaded and builds are queued. How do you improve capacity safely?
 
 Answer:
 - Inspect queue length, executor utilization, controller CPU/memory, and build duration to find the bottleneck.
@@ -87,7 +77,7 @@ Answer:
 - Avoid excessive parallelism that overloads shared dependencies or agents.
 - Monitor controller and agent health, and test capacity changes during representative load.
 
-### 10) Scenario: A Jenkins pipeline works on one agent but fails on another. How do you make builds reproducible?
+### 2) A Jenkins pipeline works on one agent but fails on another. How do you make builds reproducible?
 
 Answer:
 - Compare agent labels, operating system, tool versions, environment variables, workspace contents, and permissions.
@@ -96,7 +86,7 @@ Answer:
 - Ensure clean workspaces or use isolated workspaces to avoid stale artifacts.
 - Record the agent image and toolchain versions with each build.
 
-### 11) Scenario: A Jenkins job needs a deployment secret. How do you manage it?
+### 3) A Jenkins job needs a deployment secret. How do you manage it?
 
 Answer:
 - Store the credential in Jenkins Credentials or an approved external secret manager, not in a Jenkinsfile or repository.
@@ -105,7 +95,7 @@ Answer:
 - Prefer short-lived federated credentials for cloud deployments where available.
 - Rotate exposed credentials and audit usage if a secret appears in logs or source control.
 
-### 12) Scenario: A Jenkins build is stuck waiting for an agent. How do you debug it?
+### 4) A Jenkins build is stuck waiting for an agent. How do you debug it?
 
 Answer:
 - Check the queue item's requested label and confirm a matching agent is online and has free executors.
@@ -114,7 +104,7 @@ Answer:
 - Check whether maintenance mode, authorization, or a disconnected node prevents scheduling.
 - Add queue and agent-capacity monitoring so the issue is visible before it blocks releases.
 
-### 13) Scenario: A Jenkins controller was compromised or is suspected to be insecure. What immediate actions do you take?
+### 5) A Jenkins controller was compromised or is suspected to be insecure. What immediate actions do you take?
 
 Answer:
 - Follow the incident response process: restrict access, preserve evidence, and assess whether credentials or artifacts were exposed.
@@ -123,7 +113,7 @@ Answer:
 - Restore from a known-good backup or rebuild from configuration as appropriate; do not assume restarting removes persistence.
 - Harden access with least privilege, supported plugin versions, network restrictions, backups, and regular security updates.
 
-### 14) Scenario: A plugin update breaks many Jenkins jobs. How do you reduce the risk of future updates?
+### 6) A plugin update breaks many Jenkins jobs. How do you reduce the risk of future updates?
 
 Answer:
 - Identify the plugin and dependency changes from update logs and reproduce in a non-production Jenkins environment.
@@ -132,7 +122,7 @@ Answer:
 - Test controller and representative pipelines before production upgrades, with backups and a maintenance window.
 - Prefer Jenkins Configuration as Code and version-controlled pipeline libraries to make recovery repeatable.
 
-### 15) Scenario: Several teams duplicate the same Jenkins pipeline logic. How do you standardize it?
+### 7) Several teams duplicate the same Jenkins pipeline logic. How do you standardize it?
 
 Answer:
 - Extract stable common steps into a versioned Shared Library or maintained pipeline template.
@@ -141,7 +131,7 @@ Answer:
 - Document ownership, upgrade guidance, and a deprecation path.
 - Migrate incrementally and preserve a way to roll back a library change.
 
-### 16) Scenario: A Jenkins pipeline reports success, but the deployment is only partially complete. How do you prevent false success?
+### 8) A Jenkins pipeline reports success, but the deployment is only partially complete. How do you prevent false success?
 
 Answer:
 - Make each deployment step fail explicitly on errors and validate the exit status of invoked tools.
@@ -149,3 +139,107 @@ Answer:
 - Set timeouts and clear failure conditions for stalled operations.
 - Publish deployment status only after the target system confirms the intended version is healthy.
 - Test failure paths so the pipeline cannot return a success status after a partial deployment.
+
+### 9) In Jenkins, we have one Master (Controller) and three Slave (Agent) nodes. If we have multiple agents connected to Jenkins, how can we configure a pipeline to execute on only one specific agent instead of distributing the job across all three agents?
+
+We can achieve this using Labels in Jenkins.
+
+First, we configure three agent nodes in Jenkins and assign a unique label to each agent. For example:
+- Slave 1 → linux-agent
+- Slave 2 → docker-agent
+- Slave 3 → kubernetes-agent
+Whenever we create a Jenkins pipeline, we can specify the label of the agent on which we want to execute the pipeline.
+
+Jenkins will identify the agent matching that label and schedule the pipeline on that particular agent.
+
+### GitHub Actions
+
+### 1) A team wants to enforce quality gates before merging to main. How do you design it?
+
+Answer:
+- Enable branch protection rules in GitHub.
+- Require pull request reviews before merging.
+- Require status checks like lint, test, security scan, and build to pass.
+- Block direct pushes to the main branch.
+- Require signed commits for higher security if needed.
+- Use GitHub Actions to enforce CI and security policies automatically.
+
+Example:
+- Main branch requires at least 2 approvals and a green build before merge.
+
+### 2) A GitHub Actions pipeline is flaky and sometimes fails randomly. What do you check?
+
+Answer:
+- Review logs for timeouts, resource limits, or rate-limits.
+- Check whether the workflow depends on external services or network access.
+- Use caching for dependencies to reduce runtime and instability.
+- Validate environment variables, secrets, and matrix strategies.
+- Confirm runner images are updated and consistent across jobs.
+- Add retries for non-deterministic external steps when appropriate.
+
+Example:
+- A workflow fails because a package registry rate-limits requests. Using a cached dependency layer or a private registry reduces instability.
+
+### 3) A release pipeline is deploying the wrong artifact version. How do you fix it?
+
+Answer:
+- Verify the Git tag, GitHub release version, and CI artifact version align.
+- Check workflow variables and environment configuration.
+- Ensure the build is triggered by the correct branch or tag.
+- Validate artifact provenance and checksum before deployment.
+- Use immutable build artifacts and versioning tags to avoid confusion.
+- Add manual approval gates for production rollout.
+
+Example:
+- A pipeline accidentally deploys the latest branch build instead of the intended release tag. The fix is to pin artifacts and enforce tag-based triggers.
+
+### 4) A new GitHub Action is failing because a secret is not available in a workflow job. How do you diagnose it?
+
+Answer:
+- Confirm the secret is defined in the repository, organization, or environment settings.
+- Check whether the workflow is running on the correct branch or environment.
+- Ensure the secret is referenced correctly in YAML and scope matches the job context.
+- Verify that `secrets` are not exposed to pull requests when not intended.
+- Check environment protection rules and access permissions.
+
+Example:
+- A production deployment job fails because the secret is defined only for `main`, but the workflow is running from a feature branch.
+
+### 5) A workflow needs cloud credentials to deploy. How do you avoid long-lived secrets?
+
+Answer:
+- Prefer workload identity federation, such as GitHub Actions OIDC to an AWS IAM role, when supported.
+- Restrict trust to the expected repository, branch, tag, environment, or workflow identity.
+- Grant the role only the deployment permissions needed and use environment approval rules for production.
+- Avoid printing credentials or sensitive environment variables in logs.
+- Audit role assumptions and rotate or revoke any credentials that may have been exposed.
+
+### 6) You need to manage many repositories with consistent CI/CD standards. How do you do it?
+
+Answer:
+- Create reusable GitHub Actions workflows with organization-level templates.
+- Standardize linting, testing, and security scanning across repositories.
+- Use templates or reusable workflows to maintain consistency.
+- Add central governance policies for branch protection and required checks.
+- Document repository standards and onboarding steps for new teams.
+
+Example:
+- An organization uses a shared workflow called `ci.yml` for all Node.js services, ensuring consistent build and test behavior.
+
+### 7) The team wants to keep GitHub Actions cost-efficient. What strategy would you recommend?
+
+Answer:
+- Use self-hosted runners for predictable workloads or large builds.
+- Cache dependencies and build artifacts to reduce repeated work.
+- Run only necessary jobs on pull requests and avoid duplicate pipelines.
+- Use matrix strategies carefully and restrict triggers to relevant branches.
+- Delete unused artifacts and set workflow concurrency to prevent redundant jobs.
+- Use path filters to trigger workflows only when relevant files change.
+
+Example:
+- A workflow only runs for application directories, not for docs-only changes.
+
+### 8) Once git push pipelen was triggered and executing and after that another developed pushed the changes how the pipeline will act is the pipeline kill and start or both pipeline will be running.
+
+
+
