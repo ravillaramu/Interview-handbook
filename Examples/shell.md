@@ -5,7 +5,7 @@
 This Bash script checks a service endpoint with a bounded number of retries. It exits non-zero if the endpoint remains unhealthy, making it suitable for a simple CI/CD verification step.
 
 Save as `check-health.sh`:
-
+```bash
 #!/bin/bash
 
 set -Eeuo pipefail
@@ -68,35 +68,43 @@ echo "ERROR: Health check failed after $MAX_ATTEMPTS attempts." >&2
 echo "Application is unhealthy: $URL" >&2
 
 exit 1
+```
 
 - Use a health endpoint intended for readiness checks, avoid printing credentials or sensitive response bodies, and set retry limits appropriate to your deployment timeout.
 
 ## Backup Files
+```bash
 #!/bin/bash 
 tar -czf backup_$(date +%F).tar.gz /path/to/directory
+```
 
 Purpose: 
 - Compresses a directory into a .tar.gz backup file with the current date.
 
 ## Jenkins Job Trigger
+```bash
 #!/bin/bash
 curl -X POST http://jenkins.local/job/your-job-name/build \
 --user your-user:your-api-token
+```
 
 Purpose: 
 - Triggers a Jenkins CI job remotely using a POST request and authentication
 
 ## System Health Check
+```bash
 #!/bin/bash
 echo "CPU Load:"; uptime
 echo -e "\nMemory Usage:"; free -m
 echo -e "\nDisk Usage:"; df -h
 echo -e "\nTop 5 Memory Consuming Processes:"; ps aux --sort=-%mem | head -n 6
+```
 
 Purpose: 
 - Shows system metrics like CPU load, memory, disk, and top memory-consuming processes.
 
 ## Service Restart on Failure
+```bash
 #!/bin/bash
 SERVICE="nginx"
 if ! systemctl is-active --quiet $SERVICE; then
@@ -105,23 +113,26 @@ systemctl start $SERVICE
 else
 echo "$SERVICE is running"
 fi
+```
 
 Purpose: 
 - Checks if nginx service is down and restarts it automatically.
 
 ## Log Rotation Script
+```bash
 #!/bin/bash
 LOG_DIR="/var/log/myapp"
 ARCHIVE_DIR="/var/log/myapp/archive"
 mkdir -p $ARCHIVE_DIR
 find $LOG_DIR/*.log -mtime +7 -exec mv {} $ARCHIVE_DIR \;
 gzip $ARCHIVE_DIR/*.log
+```
 
 Purpose: 
 - Moves logs older than 7 days to an archive and compresses them.
 
 ## Clean Up Old Log Files
-Script:
+```bash
 #!/bin/bash
 # Define the log directory and number of days to retain logs
 LOG_DIR="/var/log/myapp"
@@ -137,6 +148,7 @@ find $LOG_DIR -type f -name "*.log" -mtime +"$DAYS_TO_KEEP" -size +500M -print -
 
 # Print a success message
 echo "Old log files deleted."
+```
 
 Explanation:
 - find $LOG_DIR -type f -name "*.log" -mtime +$DAYS_TO_KEEP: Finds log files older than the specified number of days.
@@ -147,6 +159,7 @@ Explanation:
 - New Learner Insight: Log files can accumulate and take up disk space. This script helps clean up old log files by deleting those that are older than a specified number of days.
 
 ## Check Port Availability
+```bash
 #!/bin/bash
 PORT=8080
 if lsof -i:$PORT > /dev/null; then
@@ -154,30 +167,34 @@ echo "Port $PORT is in use."
 else
 echo "Port $PORT is free."
 fi
+```
 
 Purpose: 
 - Checks if a specific port (like 8080) is being used by any process.
 
 ## Monitor CPU Usage and Send Alert
+```bash
 #!/bin/bash
 THRESHOLD=80
 CPU_LOAD=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')
 if (( $(echo "$CPU_LOAD > $THRESHOLD" | bc -l) )); then
 echo "High CPU Load: $CPU_LOAD%" | mail -s "Alert: CPU Load" admin@example.com
 fi
+```
 
 Purpose: 
 - Monitors the CPU usage and sends an email alert if it exceeds the threshold (80% in this case).
 - Use: Ideal for alerting system administrators about high CPU usage.
 
 ## Monitor Memory Usage and Trigger Alert
-Script:
+```bash
 #!/bin/bash
 THRESHOLD=90
 MEMORY_USAGE=$(free | grep Mem | awk '{print $3/$2 * 100.0}')
 if (( $(echo "$MEMORY_USAGE > $THRESHOLD" | bc -l) )); then
 echo "Memory usage is high: $MEMORY_USAGE%" | mail -s "Alert: High Memory Usage" admin@example.com
 fi
+```
 
 Explanation:
 - free: Displays memory usage statistics.
@@ -186,13 +203,14 @@ Explanation:
 - New Learner Insight: This script monitors memory usage on a system and sends an email alert if usage exceeds a specified threshold.
 
 ## Check Disk Usage and Send Alert
-Script:
+```bash
 #!/bin/bash
 THRESHOLD=85
 DISK_USAGE=$(df / | grep / | awk '{ print $5 }' | sed 's/%//g')
 if [ $DISK_USAGE -gt $THRESHOLD ]; then
 echo "Disk usage is over threshold: $DISK_USAGE%" | mail -s "Disk Usage Alert" admin@example.com
 fi
+```
 
 Explanation:
 - df /: Displays disk usage of the root file system.
@@ -201,22 +219,25 @@ Explanation:
 - New Learner Insight: This script monitors disk usage and sends an email alert if usage exceeds a specified threshold.
 
 ## Restart All Failed Systemd Services
+```bash
 #!/bin/bash
 for SERVICE in $(systemctl --failed --no-legend | awk '{print $1}'); do
 systemctl restart $SERVICE
 done
+```
 
 Purpose: 
 - Restarts all failed systemd services.
 - Use: Ensures that any failed services on a Linux system are automatically restarted.
 
 ## SSH Key Generator Script
-Script:
+```bash
 #!/bin/bash
 echo "Generating SSH key for GitHub..."
 ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f ~/.ssh/id_rsa -N ""
 # Show the public key
 cat ~/.ssh/id_rsa.pub
+```
 
 Explanation:
 - ssh-keygen: This generates a new SSH key pair (public and private keys).
@@ -225,12 +246,13 @@ Explanation:
 - New Learner Insight: SSH keys are used for secure communication, such as connecting to servers or GitHub repositories without needing a password.
 
 ## Generate a Self-Signed SSL Certificate
-Script:
+```bash
 #!/bin/bash
 DOMAIN="example.com"
 CERT_DIR="/etc/ssl/certs"
 KEY_DIR="/etc/ssl/private"
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $KEY_DIR/$DOMAIN.key -out $CERT_DIR/$DOMAIN.crt
+```
 
 Explanation:
 - openssl req -x509: This generates a self-signed SSL certificate.
@@ -239,7 +261,7 @@ Explanation:
 - New Learner Insight: SSL certificates are essential for securing communication over the internet. This script helps generate a self-signed certificate for testing purposes.
 
 ## Check SSL Certificate Expiry and Send Alert
-Script:
+```bash
 #!/bin/bash
 # Define the domain and alert email
 DOMAIN="example.com"
@@ -258,6 +280,7 @@ echo "Alert sent about SSL certificate expiration."
 else
 echo "SSL certificate for $DOMAIN is valid for $DAYS_LEFT more days."
 fi
+```
 
 Explanation:
 - openssl s_client: Connects to the server and fetches the SSL certificate.
