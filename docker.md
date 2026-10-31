@@ -2,6 +2,7 @@
 
 ### 1) A Java application container exits immediately after startup. How do you debug it?
 
+```text
 Answer:
 - First, check the container logs using `docker logs <container_id>` to identify the actual failure.
 - Check the application entrypoint and command in the Dockerfile: `ENTRYPOINT` and `CMD`.
@@ -13,9 +14,11 @@ Answer:
 Example:
 - If the app expects `DB_HOST`, but it is missing, startup fails.
 - Fix by supplying config via environment variables or Kubernetes ConfigMaps/Secrets.
+```
 
 ### 2) Your Docker image is very large and slows down deployments. How do you reduce its size?
 
+```text
 Answer:
 - Use multi-stage builds to separate build and runtime dependencies.
 - Use a minimal base image such as Alpine, distroless, or Debian slim.
@@ -28,9 +31,11 @@ Answer:
 Example:
 - Node.js build stage installs dependencies and compiles the app.
 - Final runtime stage copies only the built `dist` folder and production `node_modules`, reducing image size significantly.
+```
 
 ### 3) A Docker build is failing due to cache invalidation and taking too long. How do you optimize the Dockerfile?
 
+```text
 Answer:
 - Order instructions from least frequently changing to most frequently changing.
 - Install OS dependencies before copying source code so dependency layers can be cached.
@@ -41,9 +46,11 @@ Answer:
 
 Example:
 - Put `COPY package*.json ./` before `COPY . .` so dependency installation is cached when only app code changes.
+```
 
 ### 4) A container starts successfully but is not reachable externally. What would you check?
 
+```text
 Answer:
 - Verify the application is listening on the correct port inside the container.
 - Check Docker port mapping with `docker run -p hostPort:containerPort` or `docker-compose` configuration.
@@ -54,9 +61,11 @@ Answer:
 
 Example:
 - A Node.js app listens on `127.0.0.1` by default. It still works inside the container but not from outside. Fix with `HOST=0.0.0.0`.
+```
 
 ### 5) Your application is running in Docker, but it cannot connect to Redis/MySQL/PostgreSQL. What would you do?
 
+```text
 Answer:
 - Confirm the database service is running and healthy.
 - Ensure both containers are on the same Docker network or are connected through Compose service names.
@@ -67,9 +76,11 @@ Answer:
 
 Example:
 - In Compose, the app should connect to `postgres:5432`, not `localhost:5432`.
+```
 
 ### 6) Your production Docker container runs as root, and the security team flags it. How do you fix it?
 
+```text
 Answer:
 - Create a non-root user and group in the Dockerfile.
 - Set file ownership and permissions appropriately.
@@ -82,9 +93,11 @@ Example:
 - Add:
   `RUN groupadd -r app && useradd -r -g app app`
   `USER app`
+```
 
 ### 7) A container restarts repeatedly due to crashes and stuck in a restart loop. How do you troubleshoot it?
 
+```text
 Answer:
 - Check `docker logs` to find the root error.
 - Review the restart policy with `docker inspect`.
@@ -96,9 +109,11 @@ Answer:
 
 Example:
 - If memory is exhausted, the application may crash with `Killed` or OOMKilled. Check memory limits and optimize memory usage.
+```
 
 ### 8) A Docker Compose application fails when deployed on a new machine. How do you ensure environment consistency?
 
+```text
 Answer:
 - Use a `docker-compose.yml` with versioned dependencies and environment variables.
 - Commit the Compose file and configuration to source control.
@@ -109,9 +124,11 @@ Answer:
 
 Example:
 - Add `depends_on` with health checks to ensure DB is ready before the app starts.
+```
 
 ### 9) Your team wants to reduce deployment time using Docker, but builds are slow due to large dependency installs. What do you suggest?
 
+```text
 Answer:
 - Use BuildKit for better caching and parallelization.
 - Build the image in CI with cached layers from a registry or build cache.
@@ -119,9 +136,11 @@ Answer:
 - Leverage artifact repositories for dependencies instead of building everything in the container.
 - Split build into separate steps so changes in source code do not re-trigger package installation layers.
 - Use remote caches and shared build agents for consistency.
+```
 
 ### 10) A production service is experiencing high CPU and memory usage after containerization. How do you diagnose and fix it?
 
+```text
 Answer:
 - Measure container resource usage with Docker stats and monitoring tools like Prometheus, Grafana, or cAdvisor.
 - Check for memory leaks or thread proliferation in the app itself.
@@ -132,9 +151,11 @@ Answer:
 
 Example:
 - A Java app may require tuned heap size flags to avoid frequent GC pauses.
+```
 
 ### 11) You need to persist application data across container restarts. How do you design it?
 
+```text
 Answer:
 - Use Docker volumes for persistent data instead of storing data in the container filesystem.
 - Use bind mounts only for development or configuration that needs to be synced with the host.
@@ -144,18 +165,22 @@ Answer:
 
 Example:
 - Use `docker volume create postgres-data` and mount it to `/var/lib/postgresql/data`.
+```
 
 ### 12) A deploy failed because the container was trying to write to a read-only filesystem. What is your approach?
 
+```text
 Answer:
 - Validate mounted volumes and whether the container was launched with a read-only root filesystem.
 - Check for write operations in `/tmp`, logs, or application cache directories.
 - Add a writable volume for logs or cache if required.
 - Adjust application configuration to use a dedicated writable path.
 - Review security hardening settings and update them for compatibility.
+```
 
 ### 13) The team wants zero-downtime deployments with Docker. How do you achieve that?
 
+```text
 Answer:
 - Run multiple replicas behind a load balancer.
 - Use rolling updates and health checks.
@@ -163,9 +188,11 @@ Answer:
 - Use Kubernetes or an orchestration tool to gradually replace old containers.
 - Ensure readiness probes are configured correctly before traffic is routed to a new instance.
 - Keep the container image immutable and versioned for traceability.
+```
 
 ### 14) A Docker registry is slow or unavailable during deployments. How do you handle this?
 
+```text
 Answer:
 - Use a private registry with high availability and replication.
 - Cache images in CI/CD to avoid repeated pulls.
@@ -173,9 +200,11 @@ Answer:
 - Set up a fallback registry or mirror for critical environments.
 - Implement retries and proper timeout settings in the CI pipeline.
 - Monitor registry performance and storage capacity.
+```
 
 ### 15) A Dockerized app works in development but fails in production. What could be the reason?
 
+```text
 Answer:
 - Differences in environment variables, secrets, or config files.
 - The app may be using development mode rather than production mode.
@@ -188,30 +217,37 @@ Best practice:
 - Use the same base image and configuration management strategy across environments.
 - Validate with staging before production rollout.
 - Use configuration templating and environment-specific secrets.
+```
 
 ### 16) In a production environment, logs are growing rapidly, causing disk space issues. How would you manage container logs effectively to avoid storage overuse?
 
+```text
 Answer:
 - Configure log rotation using --log-opt max-size=<size> and --log-opt max-file=<number> to limit log file sizes and the number of retained logs.
 - Use a centralized logging system such as the ELK stack (Elasticsearch, Logstash, Kibana) or Fluentd for offloading and processing logs.
 - Use Docker logging drivers like syslog or gelf to send logs to external services, freeing up local disk space.
 - Monitor log growth and periodically prune old logs with automation tools.
+```
 
 ### 17) Two services in your application need to share persistent data (e.g., a database service and an analytics service). How would you set this up using Docker?
 
+```text
 Answer:
 - Use Docker Volumes to create a shared, persistent storage layer that can be accessed by multiple containers.
 - In a Docker Compose file, define a shared volume under the volumes section and mount it into both services.
 - Ensure proper read/write permissions are configured to avoid data corruption between the services.
 - Use volumes for persistent data, as they are more secure and manageable compared to bind mounts.
+```
 
 ### 17) Your team needs to monitor Docker containers for performance issues, such as high memory or CPU usage. How would you monitor container metrics in a production environment?
 
+```text
 Answer:
 - Use Docker’s docker stats command for real-time monitoring of CPU, memory, and network usage for each container.
 - Implement a full monitoring stack using tools like Prometheus (for metrics collection) and Grafana (for visualization) to track performance over time.
 - Set up alerts for resource utilization thresholds (e.g., CPU > 80%, memory > 90%) to proactively address performance issues.
 - Use centralized monitoring solutions like Datadog or New Relic for enterprise-grade container monitoring and alerting.
+```
 
 ### 18) What is the purpose of the Dockerfile? Walk through a basic example.
 ### 19) What’s the difference between CMD and ENTRYPOINT in a Dockerfile?
@@ -229,4 +265,3 @@ Answer:
 ### 31) What’s the role of container image scanning in DevSecOps? 
 ### 32) How do you detect and mitigate CVEs in base images?
 ### 33) What are the challenges with multi-arch builds and how do you solve them?
- 
