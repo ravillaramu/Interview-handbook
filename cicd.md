@@ -171,6 +171,8 @@ Answer:
 
 ### 9) In Jenkins, we have one Master (Controller) and three Slave (Agent) nodes. If we have multiple agents connected to Jenkins, how can we configure a pipeline to execute on only one specific agent instead of distributing the job across all three agents?
 
+```text
+Answer:
 We can achieve this using Labels in Jenkins.
 
 First, we configure three agent nodes in Jenkins and assign a unique label to each agent. For example:
@@ -180,6 +182,7 @@ First, we configure three agent nodes in Jenkins and assign a unique label to ea
 Whenever we create a Jenkins pipeline, we can specify the label of the agent on which we want to execute the pipeline.
 
 Jenkins will identify the agent matching that label and schedule the pipeline on that particular agent.
+```
 
 ### GitHub Actions
 
